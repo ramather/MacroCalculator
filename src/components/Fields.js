@@ -5,51 +5,89 @@ import { Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Screen from "./Screen";
 import Button from "react-bootstrap/Button";
+import { Container } from "react-bootstrap";
 
 const Fields = () => {
-
-  const [ form, setForm ] = useState({})
-  const [ errors, setErrors ] = useState({})
+  const [form, setForm] = useState({});
+  const [errors, setErrors] = useState({});
   const [total, setTotal] = useState(0);
-  const [rate, setRate] = useState(1);
-  const [sex, setSex] = useState(5);
-  const [age, setAge] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [weight, setWeight] = useState(0);
+
+
+  const findErrors = () => {
+    const { rate, sex, age, height, weight } = form;
+    const newErrors = {};
+
+    if (!rate || rate === 0) newErrors.rate = "plz";
+
+    if (!sex || sex === 0) newErrors.sex = "plz";
+
+    if (!age || age === "") newErrors.age = "please enter an age";
+    else if (age < 18 || age > 80) newErrors.age = "age must be between 18-80";
+
+    if (!height || height === "") newErrors.height = "plz enter height";
+    else if (height < 1) newErrors.height = "cannot be less than 0, fren";
+
+    if (!weight || weight === "") newErrors.weight = "plz";
+    else if (weight < 1) newErrors.weight = "gotta be at least 1kg, fren";
+
+    return newErrors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = findErrors();
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      setTotal(calCalc(form.age, form.height, form.weight, form.rate, form.sex))
+    }
+  };
 
   const setField = (field, value) => {
     setForm({
       ...form,
-      [field]: value
+      [field]: value,
+    });
+    if ( !!errors[field] ) setErrors({
+      ...errors,
+      [field]: null
     })
-  }
+  };
 
   return (
     <div style={{ paddingTop: "50px" }}>
+
       <div className="wrapper">
         <Screen value={total} />
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <div className="inputs">
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Height</Form.Label>
               <Form.Control
-                onChange={(event) => {
-                  setHeight(event.target.value);
-                }}
-                type="text"
+                isInvalid={!!errors.height}
+                onChange={(e) => setField("height", e.target.value)}
+                type="number"
               />
+
+              <Form.Control.Feedback type="invalid">
+                {errors.height}
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
           <div className="inputs">
             <Form.Group className="mb-3">
               <Form.Label>Weight</Form.Label>
               <Form.Control
+                isInvalid={!!errors.weight}
+                type="number"
                 className="inputs"
-                type="text"
-                onChange={(event) => {
-                  setWeight(event.target.value);
-                }}
+                onChange={(e) => setField("weight", e.target.value)}
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.weight}
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
 
@@ -57,33 +95,33 @@ const Fields = () => {
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>Age</Form.Label>
               <Form.Control
-                onChange={(event) => {
-                  if (event.target.value < 18) {
-                    setAge(18);
-                  } else if (event.target.value > 80) {
-                    setAge(80);
-                  } else {
-                    setAge(event.target.value);
-                  }
-                }}
-                type="text"
+                isInvalid={!!errors.age}
+                onChange={(e) => setField("age", e.target.value)}
+                type="number"
               />
+              <Form.Control.Feedback type="invalid">
+                {errors.age}
+              </Form.Control.Feedback>
             </Form.Group>
           </div>
           <Row>
             <Col>
               <div style={{ paddingLeft: "15px" }}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" >
                   <Form.Label>Sex</Form.Label>
-                  <Form.Select
-                    defaultValue="Choose..."
-                    onChange={(event) => {
-                      setSex(event.target.value);
-                    }}
+                  <Form.Control
+                    isInvalid={!!errors.sex}
+                    as="select"
+                    onChange={(e) => setField("sex", e.target.value)}
                   >
-                    <option value="5">male</option>
-                    <option value="-161">female</option>
-                  </Form.Select>
+                    <option value={0}>Select:</option>
+
+                    <option value={5}>male</option>
+                    <option value={-161}>female</option>
+                  </Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.sex}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
             </Col>
@@ -91,31 +129,36 @@ const Fields = () => {
               <div style={{ paddingRight: "15px" }}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Activity Level</Form.Label>
-                  <Form.Select
-                    onChange={(event) => {
-                      setRate(event.target.value);
-                    }}
+
+                  <Form.Control
+                    as="select"
+                    isInvalid={!!errors.rate}
+                    onChange={(e) => setField("rate", e.target.value)}
                   >
-                    <option value="1">Basal Metabolic Rate (BMR)</option>
-                    <option value="1.2">
+                    <option value={0}>Select:</option>
+                    <option value={1}>Basal Metabolic Rate (BMR)</option>
+                    <option value={1.2}>
                       Sedentary: little or no exercise
                     </option>
-                    <option value="1.375">
+                    <option value={1.375}>
                       Light: exercise 1-3 times/week
                     </option>
-                    <option value="1.465">
+                    <option value={1.465}>
                       Moderate: exercise 4-5 times/week
                     </option>
-                    <option value="1.55">
+                    <option value={1.55}>
                       Active: daily exercise or intense exercise 3-4 times/week
                     </option>
-                    <option value="1.725">
+                    <option value={1.725}>
                       Very Active: intense exercise 6-7 times/week
                     </option>
-                    <option value="1.9">
+                    <option value={1.9}>
                       Extra Active: very intense exercise daily, or physical job
                     </option>{" "}
-                  </Form.Select>
+                  </Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    {errors.rate}
+                  </Form.Control.Feedback>
                 </Form.Group>
               </div>
             </Col>
@@ -123,12 +166,10 @@ const Fields = () => {
           <Button
             variant="secondary"
             style={{ width: "60%" }}
+            type="submit"
             onClick={() => {
-              if (age === 0 || weight === 0 || height === 0) {
-                alert("Please fill out the fields");
-              } else {
-                setTotal(calCalc(age, height, weight, rate, sex));
-              }
+              console.log(form);
+              // handleSubmit()
             }}
           >
             Calculate
@@ -137,18 +178,19 @@ const Fields = () => {
       </div>
       <Calculations
         total={total}
-        sex={sex}
-        age={age}
-        height={height}
-        weight={weight}
-        rate={rate}
       />
+    
     </div>
   );
 };
 
-
 function calCalc(age, height, weight, rate, sex) {
+  console.log(`this is the sex: ` + sex);
+  console.log(typeof sex);
+  console.log("this is the rate " + rate);
+  console.log(typeof rate);
+  rate = parseFloat(rate)
+  sex = parseInt(sex)
   let calories = 10 * weight + 6.25 * height - 5 * age + sex;
   calories = calories * rate;
   return Math.round(calories);
