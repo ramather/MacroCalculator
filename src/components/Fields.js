@@ -5,7 +5,6 @@ import { Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Screen from "./Screen";
 import Button from "react-bootstrap/Button";
-import { Container } from "react-bootstrap";
 
 const Fields = () => {
   const [form, setForm] = useState({});
