@@ -18,6 +18,20 @@ code {
 
 }
 
+.accordionBox{
+  width: 440px;
+  margin: auto;
+  padding-top: 12px;
+}
+
+@media only screen and (max-width: 600px) {
+  .accordionBox{
+    width: 95%;
+    margin: auto;
+    padding-top: 8px;
+  }
+}
+
 
 
 .App {
