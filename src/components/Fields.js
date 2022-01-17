@@ -63,8 +63,9 @@ const Fields = () => {
         <Form onSubmit={handleSubmit}>
           <div className="inputs">
             <Form.Group className="mb-3">
-              <Form.Label>Height</Form.Label>
+              <Form.Label>Height (cm)</Form.Label>
               <Form.Control
+              patern = "0-9*"
                 isInvalid={!!errors.height}
                 onChange={(e) => setField("height", e.target.value)}
                 type="number"
@@ -77,8 +78,9 @@ const Fields = () => {
           </div>
           <div className="inputs">
             <Form.Group className="mb-3">
-              <Form.Label>Weight</Form.Label>
+              <Form.Label>Weight (kg)</Form.Label>
               <Form.Control
+                patern = "0-9*"
                 isInvalid={!!errors.weight}
                 type="number"
                 className="inputs"
@@ -94,6 +96,7 @@ const Fields = () => {
             <Form.Group className="mb-3">
               <Form.Label>Age</Form.Label>
               <Form.Control
+                patern = "0-9*"
                 isInvalid={!!errors.age}
                 onChange={(e) => setField("age", e.target.value)}
                 type="number"
