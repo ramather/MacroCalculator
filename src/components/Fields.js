@@ -56,13 +56,13 @@ const Fields = () => {
   };
 
   return (
-    <div style={{ paddingTop: "50px" }}>
+    <div id="container">
 
       <div className="wrapper">
         <Screen value={total} />
         <Form onSubmit={handleSubmit}>
           <div className="inputs">
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3">
               <Form.Label>Height</Form.Label>
               <Form.Control
                 isInvalid={!!errors.height}
@@ -91,7 +91,7 @@ const Fields = () => {
           </div>
 
           <div className="inputs">
-            <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Group className="mb-3">
               <Form.Label>Age</Form.Label>
               <Form.Control
                 isInvalid={!!errors.age}
@@ -126,7 +126,7 @@ const Fields = () => {
             </Col>
             <Col>
               <div style={{ paddingRight: "15px" }}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3">
                   <Form.Label>Activity Level</Form.Label>
 
                   <Form.Control
