@@ -5,11 +5,13 @@ import { Row } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Screen from "./Screen";
 import Button from "react-bootstrap/Button";
+import HeightAndWeight from "./HeightAndWeight";
 
 const Fields = () => {
   const [form, setForm] = useState({});
   const [errors, setErrors] = useState({});
   const [total, setTotal] = useState(0);
+
 
 
   const findErrors = () => {
@@ -20,7 +22,7 @@ const Fields = () => {
 
     if (!sex || sex === 0) newErrors.sex = "plz";
 
-    if (!age || age === "") newErrors.age = "please enter an age";
+    if (!age || age === "") newErrors.age = "plz enter an age";
     else if (age < 18 || age > 80) newErrors.age = "age must be between 18-80";
 
     if (!height || height === "") newErrors.height = "plz enter height";
@@ -31,7 +33,7 @@ const Fields = () => {
 
     return newErrors;
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -61,37 +63,9 @@ const Fields = () => {
       <div className="wrapper">
         <Screen value={total} />
         <Form onSubmit={handleSubmit}>
-          <div className="inputs">
-            <Form.Group className="mb-3">
-              <Form.Label>Height (cm)</Form.Label>
-              <Form.Control
-              patern = "0-9*"
-                isInvalid={!!errors.height}
-                onChange={(e) => setField("height", e.target.value)}
-                type="number"
-              />
-
-              <Form.Control.Feedback type="invalid">
-                {errors.height}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </div>
-          <div className="inputs">
-            <Form.Group className="mb-3">
-              <Form.Label>Weight (kg)</Form.Label>
-              <Form.Control
-                patern = "0-9*"
-                isInvalid={!!errors.weight}
-                type="number"
-                className="inputs"
-                onChange={(e) => setField("weight", e.target.value)}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.weight}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </div>
-
+          
+          <HeightAndWeight  errors={errors}  setField={setField}/>
+        
           <div className="inputs">
             <Form.Group className="mb-3">
               <Form.Label>Age</Form.Label>
@@ -167,15 +141,15 @@ const Fields = () => {
           </Row>
           <Button
             variant="secondary"
-            style={{ width: "60%" }}
+            style={{ width: "50%" }}
             type="submit"
             onClick={() => {
               console.log(form);
-              // handleSubmit()
             }}
           >
             Calculate
           </Button>
+         
         </Form>
       </div>
       <Calculations
@@ -187,10 +161,7 @@ const Fields = () => {
 };
 
 function calCalc(age, height, weight, rate, sex) {
-  console.log(`this is the sex: ` + sex);
-  console.log(typeof sex);
-  console.log("this is the rate " + rate);
-  console.log(typeof rate);
+
   rate = parseFloat(rate)
   sex = parseInt(sex)
   let calories = 10 * weight + 6.25 * height - 5 * age + sex;
